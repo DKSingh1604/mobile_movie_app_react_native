@@ -20,7 +20,7 @@ const TabIcon = ({
       <SafeArea>
         <ImageBackground
           source={images.highlight}
-          className="flex flex-row w-full flex-1 min-w-[112px] min-h-14 mt-4 justify-center items-center rounded-full overflow-hidden"
+          className="flex flex-row w-full flex-1 min-w-[112px] min-h-16 mt-4 justify-center items-center rounded-full overflow-hidden"
         >
           <Image
             source={icon}
@@ -53,7 +53,26 @@ const TabIcon = ({
 const _layout = () => {
   return (
     <Tabs
-      screenOptions={{ tabBarShowLabel: false }}
+      screenOptions={{
+        tabBarShowLabel: false,
+        tabBarItemStyle: {
+          width: "100%",
+          height: "100%",
+          justifyContent: "center",
+          alignItems: "center",
+        },
+        tabBarStyle: {
+          backgroundColor: "#0f0D23",
+          borderRadius: 50,
+          marginHorizontal: 20,
+          marginBottom: 36,
+          height: 54.5,
+          position: "absolute",
+          overflow: "hidden",
+          borderWidth: 1,
+          borderColor: "#0f0d23",
+        },
+      }}
     >
       <Tabs.Screen
         name="index"
