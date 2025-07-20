@@ -12,6 +12,11 @@ export const fetchMovies = async ({
 }: {
   query: string;
 }): Promise<Movie[]> => {
+  
+  if (!process.env.EXPO_PUBLIC_MOVIE_API_KEY) {
+    throw new Error("Movie API key is not configured. Please check your .env file.");
+  }
+
   const endpoint = query
     ? `${TMDB_CONFIG.BASE_URL}/search/movie?query=${encodeURIComponent(query)}`
     : `${TMDB_CONFIG.BASE_URL}/discover/movie?sort_by=popularity.desc`;

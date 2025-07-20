@@ -1,14 +1,17 @@
+import MovieCard from "@/components/MovieCard";
 import SearchBar from "@/components/SearchBar";
 import { icons } from "@/constants/icons";
 import { images } from "@/constants/images";
 import { fetchMovies } from "@/services/api";
 import useFetch from "@/services/useFetch";
-import { Text } from "@react-navigation/elements";
+// import { Text } from "@react-navigation/elements";
 import { useRouter } from "expo-router";
 import {
   ActivityIndicator,
+  FlatList,
   Image,
   ScrollView,
+  Text,
   View,
 } from "react-native";
 export default function Index() {
@@ -46,9 +49,11 @@ export default function Index() {
             className="mt-10 self-center"
           />
         ) : moviesError ? (
-          <Text className="text-100 text-white ml-50">
-            Error: {moviesError?.message}
-          </Text>
+          <View className="mt-10 px-4">
+            <Text className="text-lg text-red-400 font-bold mb-2 text-center">
+              Error: {moviesError?.message}
+            </Text>
+          </View>
         ) : (
           <View className="flex-1 mt-5">
             <SearchBar
@@ -61,6 +66,28 @@ export default function Index() {
               <Text className="text-lg text-white font-bold mt-5 mb-3">
                 Latest Movies
               </Text>
+
+              <FlatList
+                data={movies}
+                renderItem={({ item }) => (
+                  // <Text className="text-sm text-white">
+                  //   {item.title}
+                  // </Text>
+                  <MovieCard {...item} />
+                )}
+                keyExtractor={(item) =>
+                  item.id.toString()
+                }
+                numColumns={3}
+                columnWrapperStyle={{
+                  justifyContent: "flex-start",
+                  gap: 20,
+                  paddingRight: 5,
+                  marginBottom: 10,
+                }}
+                className="mt-2 pb-32"
+                scrollEnabled={false}
+              />
             </>
           </View>
         )}
