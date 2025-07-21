@@ -78,7 +78,7 @@ export default function Index() {
                 keyExtractor={(item) =>
                   item.id.toString()
                 }
-                numColumns={3}
+                numColumns={2}
                 columnWrapperStyle={{
                   justifyContent: "flex-start",
                   gap: 20,
