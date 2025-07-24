@@ -33,7 +33,10 @@ const MovieCard = ({
           className="w-40 h-72 rounded-lg"
           resizeMode="cover"
         />
-        <Text className="text-sm font-bold text-white mt-2">
+        <Text
+          className="text-lg font-bold text-white mt-2"
+          numberOfLines={1}
+        >
           {title}
         </Text>
         <View className="flex-row items-center justify-between">
@@ -44,7 +47,7 @@ const MovieCard = ({
             </Text>
           </View>
           <View>
-            <Text className="text-xs text-light-300 font-medium mt-1">
+            <Text className="text-s text-light-300 font-medium mt-1">
               {release_date?.split("-")[0]}
             </Text>
           </View>
