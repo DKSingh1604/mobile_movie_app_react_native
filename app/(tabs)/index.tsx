@@ -61,6 +61,14 @@ export default function Index() {
                 router.push("/search")
               }
               placeholder="Seach for a movie.."
+              value={""}
+              onChangeText={function (
+                text: string
+              ): void {
+                throw new Error(
+                  "Function not implemented."
+                );
+              }}
             />
             <>
               <Text className="text-lg text-white font-bold mt-5 mb-3">

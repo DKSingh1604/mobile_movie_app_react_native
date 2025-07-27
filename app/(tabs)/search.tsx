@@ -1,11 +1,4 @@
-/* eslint-disable react-hooks/rules-of-hooks */
-import MovieCard from "@/components/MovieCard";
-import SearchBar from "@/components/SearchBar";
-import { icons } from "@/constants/icons";
-import { images } from "@/constants/images";
-import { fetchMovies } from "@/services/api";
-import useFetch from "@/services/useFetch";
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -14,38 +7,78 @@ import {
   View,
 } from "react-native";
 
-const search = () => {
+import { icons } from "@/constants/icons";
+import { images } from "@/constants/images";
+
+// import useFetch from "@/services/usefetch";
+import { fetchMovies } from "@/services/api";
+// import { updateSearchCount } from "@/services/appwrite";
+
+import MovieDisplayCard from "@/components/MovieCard";
+import SearchBar from "@/components/SearchBar";
+import useFetch from "@/services/useFetch";
+
+const Search = () => {
   const [searchQuery, setSearchQuery] =
-    useState(" ");
+    useState("");
 
   const {
-    data: movies,
-    loading: moviesLoading,
-    error: moviesError,
+    data: movies = [],
+    loading,
+    error,
+    refetch: loadMovies,
+    reset,
   } = useFetch(
     () => fetchMovies({ query: searchQuery }),
     false
   );
 
+  const handleSearch = (text: string) => {
+    setSearchQuery(text);
+  };
+
+  // Debounced search effect
+  useEffect(() => {
+    //debouncing seach term so that an api call is not made on every key stroke, if someone types fast
+    const timeoutId = setTimeout(async () => {
+      if (searchQuery.trim()) {
+        await loadMovies();
+
+        // Call updateSearchCount only if there are results
+        if (movies?.length! > 0 && movies?.[0]) {
+          await updateSearchCount(
+            searchQuery,
+            movies[0]
+          );
+        }
+      } else {
+        reset();
+      }
+    }, 1000);
+
+    return () => clearTimeout(timeoutId);
+  }, [searchQuery]);
+
   return (
     <View className="flex-1 bg-primary">
       <Image
         source={images.bg}
-        className="flex-2 absolute w-full z-0"
+        className="flex-1 absolute w-full z-0"
         resizeMode="cover"
-      ></Image>
+      />
+
       <FlatList
-        data={movies}
-        renderItem={({ item }) => (
-          <MovieCard {...item} />
-        )}
+        className="px-5"
+        data={movies as Movie[]}
         keyExtractor={(item) =>
           item.id.toString()
         }
-        className="px-5"
-        numColumns={2}
+        renderItem={({ item }) => (
+          <MovieDisplayCard {...item} />
+        )}
+        numColumns={3}
         columnWrapperStyle={{
-          justifyContent: "center",
+          justifyContent: "flex-start",
           gap: 16,
           marginVertical: 16,
         }}
@@ -54,49 +87,62 @@ const search = () => {
         }}
         ListHeaderComponent={
           <>
-            <View className="w-full flex-row justify-center mt-20">
+            <View className="w-full flex-row justify-center mt-20 items-center">
               <Image
                 source={icons.logo}
-                className="w-40 h-20"
-              ></Image>
+                className="w-40 h-40"
+              />
             </View>
+
             <View className="my-5">
               <SearchBar
-                placeholder="Search movies..."
+                placeholder="Search for a movie"
                 value={searchQuery}
-                onChangeText={(text: string) =>
-                  setSearchQuery
-                }
+                onChangeText={handleSearch}
               />
             </View>
-            {moviesLoading && (
+
+            {loading && (
               <ActivityIndicator
+                size="large"
+                color="#0000ff"
                 className="my-3"
-                size={"large"}
-                color={"#0000ff"}
               />
             )}
-            {moviesError && (
-              <Text className="text-500-red px-5 my-3">
-                Error: {moviesError.message}
+
+            {error && (
+              <Text className="text-red-500 px-5 my-3">
+                Error: {error.message}
               </Text>
             )}
-            {!moviesLoading &&
-              !moviesError &&
+
+            {!loading &&
+              !error &&
               searchQuery.trim() &&
-              movies?.length > 0 && (
+              movies?.length! > 0 && (
                 <Text className="text-xl text-white font-bold">
-                  Search Results for {searchQuery}
+                  Search Results for{" "}
                   <Text className="text-accent">
-                    SEARCH TERM
+                    {searchQuery}
                   </Text>
                 </Text>
               )}
           </>
+        }
+        ListEmptyComponent={
+          !loading && !error ? (
+            <View className="mt-10 px-5">
+              <Text className="text-center text-gray-500">
+                {searchQuery.trim()
+                  ? "No movies found"
+                  : "Start typing to search for movies"}
+              </Text>
+            </View>
+          ) : null
         }
       />
     </View>
   );
 };
 
-export default search;
+export default Search;
