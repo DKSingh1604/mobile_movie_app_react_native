@@ -16,6 +16,7 @@ import { fetchMovies } from "@/services/api";
 
 import MovieDisplayCard from "@/components/MovieCard";
 import SearchBar from "@/components/SearchBar";
+import { updateSearchCount } from "@/services/appwrite";
 import useFetch from "@/services/useFetch";
 
 const Search = () => {
