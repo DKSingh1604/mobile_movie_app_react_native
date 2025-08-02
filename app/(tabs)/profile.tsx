@@ -1,12 +1,22 @@
-import React from 'react'
-import { Text, View } from 'react-native'
+import { icons } from "@/constants/icons";
+import React from "react";
+import { Image, Text, View } from "react-native";
 
 const profile = () => {
   return (
-    <View>
-      <Text>profile</Text>
+    <View className="bg-primary flex-1 px-10">
+      <View className="flex justify-center items-center flex-1 flex-col gap-5">
+        <Image
+          source={icons.person}
+          className="size-10"
+          tintColor={"#Fff"}
+        ></Image>
+        <Text className="text-grey-500 text-base">
+          Profile
+        </Text>
+      </View>
     </View>
-  )
-}
+  );
+};
 
-export default profile
+export default profile;
